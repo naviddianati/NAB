@@ -128,7 +128,7 @@ public:
 			List origin_list = (*origin_it).second;
 			for (list_it = origin_list.begin(); list_it != origin_list.end();
 					++list_it) {
-				scores[(*list_it).first] += origin_list.size() - 1;
+				scores[(*list_it).first] +=  origin_list.size() - 1;
 			}
 		}
 	}
