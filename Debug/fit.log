@@ -1,0 +1,62 @@
+
+
+*******************************************************************************
+Wed May  7 15:25:52 2014
+
+
+FIT:    data read from tablename using (log10($1)):(log10($2))
+        format = x:z
+        x range restricted to [0.00000 : 1.10000]
+        #datapoints = 12
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b            
+   0 3.6824964222e+01   0.00e+00  9.01e-01    1.000000e+00   1.000000e+00
+2678 7.8105571485e-86  -2.00e+02  9.01e-21    2.166103e-43  -1.999818e-43
+
+The fit was stopped by the user after 26780 iterations.
+final sum of squares of residuals : 7.81056e-86
+abs. change during last iteration : -1.56289e-88
+
+
+Hmmmm.... Sum of squared residuals is zero. Can't compute errors.
+
+Final set of parameters 
+======================= 
+
+a               = 2.1661e-43     
+b               = -1.99982e-43   
+
+
+*******************************************************************************
+Wed May  7 15:26:15 2014
+
+
+FIT:    data read from tablename using (log10($1)):(log10($2))
+        format = x:z
+        x range restricted to [0.00000 : 1.10000]
+        #datapoints = 12
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b            
+   0 3.6824964222e+01   0.00e+00  9.01e-01    1.000000e+00   1.000000e+00
+3199 2.2892580643e-65  -1.99e+02  9.01e-21    3.743570e-33  -3.431478e-33
+
+The fit was stopped by the user after 3199 iterations.
+final sum of squares of residuals : 2.28926e-65
+abs. change during last iteration : -4.55519e-68
+
+
+Hmmmm.... Sum of squared residuals is zero. Can't compute errors.
+
+Final set of parameters 
+======================= 
+
+a               = 3.74357e-33    
+b               = -3.43148e-33   

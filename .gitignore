@@ -1,3 +1,6 @@
 *.d
 *.o
+*.txt
+*.pdf
+*.table
 
