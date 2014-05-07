@@ -10,7 +10,8 @@
 
 using namespace std;
 
-int size, num_agents,num_steps;
+int size, num_agents, num_steps, num_ensembles;
+string mode; // "single" or "ensemble"
 
 void process_input(int argc, char* argv[]) {
 	if (argc == 1) {
@@ -21,6 +22,13 @@ void process_input(int argc, char* argv[]) {
 		size = atoi(argv[1]);
 		num_agents = atoi(argv[2]);
 		num_steps = atoi(argv[3]);
+		mode = "single";
+	} else if (argc == 5) {
+		size = atoi(argv[1]);
+		num_agents = atoi(argv[2]);
+		num_steps = atoi(argv[3]);
+		num_ensembles = atoi(argv[4]);
+		mode = "ensemble";
 	} else {
 		printf("Invalid arguments.");
 		exit(EXIT_FAILURE);
@@ -30,11 +38,18 @@ void process_input(int argc, char* argv[]) {
 int main(int argc, char* argv[]) {
 	process_input(argc, argv);
 	AgentBased model(size);
-	model.doSomething();
-	model.generateAgents(num_agents);
+	model.resetAgents(num_agents);
 
-	model.run(num_steps,0);
-	model.print_scores();
+	model.setDebug(1);
+
+	if (mode == "single") {
+		model.run(num_steps, 0);
+		model.printScores();
+	}
+
+	if (mode == "ensemble") {
+		model.ensembleFixedTime(num_ensembles, num_steps, 0);
+	}
 
 	exit(0);
 	for (int i = 0; i < num_steps; i++) {

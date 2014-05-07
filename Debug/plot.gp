@@ -18,7 +18,7 @@ set table tablename
 plot filename using (bin($2,binwidth)):(2) smooth freq  with boxes
 unset table
 
-set logscale xy;
+set logscale y;
 load 'Paired.plt'
 set style fill transparent solid 0.1
 set samples 10000
@@ -45,7 +45,7 @@ h(x) = sqrt(2*pi)/x
 set output name.'.pdf'
 
 #plot   tablename using 1:($2):(binwidth)  with boxes ls 5  title 'Degree distribution'
-plot  []  tablename using 1:($2):(binwidth)  with points ls 2 pt 2 ps 0.5 lw 3  title 'Degree distribution';
+plot  []  tablename using 1:($2):(binwidth)  with points ls 2 pt 2 lc rgb "#44306080" ps 0.5 lw 3  title 'Degree distribution';
 
 #    g(x) with lines lt 1 lc rgb "#33ff4500"  lw 6  title 'Fit: '.sprintf("a = %1.2f; b = %1.2f",a,b);
     

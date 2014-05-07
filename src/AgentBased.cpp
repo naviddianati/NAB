@@ -26,6 +26,7 @@ public:
 	DictSpace space;
 	DictPoints points;
 	List scores;
+	bool debug;
 
 	AgentBased(int N) :
 			origin(0, 0) {
@@ -39,20 +40,32 @@ public:
 		num_agents = 0;
 		DictSpace::iterator it;
 		DictPoints::iterator itpoints;
+		debug = false;
 
+		resetScores();
+
+	}
+
+	void setDebug(bool isDebug) {
+		debug = isDebug;
+	}
+	void resetScores() {
 		for (int i = 0; i < num_agents; i++)
 			scores[i] = 0;
-
 	}
 
 	void doSomething() {
 	}
 
-	void generateAgents(int n) {
+	void resetAgents(int n) {
 		num_agents = n;
+
+		// empty space
+		space.clear();
+		points.clear();
 		List list;
 		for (int i = 0; i < n; i++) {
-			Point p(rand() % size-(size/2), rand() % size-(size/2));
+			Point p(rand() % size - (size / 2), rand() % size - (size / 2));
 			points[i] = p;
 			try {
 				space.at(p)[i] = 1;
@@ -62,6 +75,9 @@ public:
 //				cout << e.what() << "\n";
 			}
 		}
+
+		if (debug)
+			listAll();
 	}
 
 	void listAll() {
@@ -105,7 +121,6 @@ public:
 
 	/* move all agents one step forward */
 	void step() {
-
 		// for each agent id, move the agent
 		for (int i = 0; i < num_agents; i++)
 			move(i);
@@ -119,21 +134,20 @@ public:
 				space.erase(it++);
 			} else
 				++it;
-		update_scores();
 	}
 
-	void update_scores() {
+	void updateScores() {
 		DictSpace::iterator origin_it = space.find(origin);
 		if (origin_it != space.end()) {
 			List origin_list = (*origin_it).second;
 			for (list_it = origin_list.begin(); list_it != origin_list.end();
 					++list_it) {
-				scores[(*list_it).first] +=  origin_list.size() - 1;
+				scores[(*list_it).first] += origin_list.size() - 1;
 			}
 		}
 	}
 
-	void print_scores() {
+	void printScores() {
 		for (int i = 0; i < num_agents; i++)
 			printf("%d %d\n", i, scores[i]);
 
@@ -144,7 +158,29 @@ public:
 			if (verbose)
 				printf("%d\n", i);
 			step();
+			updateScores();
+		}
+	}
 
+	void runFixedTime(int steps, bool verbose) {
+		for (int i = 0; i < steps; i++) {
+			if (verbose)
+				printf("%d\n", i);
+			step();
+		}
+		updateScores();
+	}
+
+	void ensembleFixedTime(int ensemble_size, int steps, bool verbose) {
+		for (int i = 0; i < ensemble_size; i++) {
+			if (verbose)
+				printf("Ensemble no %d\n", i);
+			resetAgents(num_agents);
+			resetScores();
+			runFixedTime(steps, 0);
+			printScores();
+			if (debug)
+				listAll();
 		}
 	}
 
