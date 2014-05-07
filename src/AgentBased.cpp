@@ -52,7 +52,7 @@ public:
 		num_agents = n;
 		List list;
 		for (int i = 0; i < n; i++) {
-			Point p(rand() % size, rand() % size);
+			Point p(rand() % size-(size/2), rand() % size-(size/2));
 			points[i] = p;
 			try {
 				space.at(p)[i] = 1;
