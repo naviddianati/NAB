@@ -13,19 +13,21 @@
 using namespace std;
 
 typedef std::map<int, int> List;
-typedef std::map<std::pair<int, int>, List> DictSpace;
+typedef std::map<int, double> ListDouble;
+typedef std::pair<int, int> Point;
+typedef std::map<Point, List> DictSpace;
 
 // Dict {id: point}
-typedef std::map<int, std::pair<int, int> > DictPoints;
-typedef std::pair<int, int> Point;
+typedef std::map<int, Point> DictPoints;
 
 class AgentBased {
 public:
 	int size, num_agents;
 
 	DictSpace space;
-	DictPoints points;
+	DictPoints points, points_initial;
 	List scores;
+	ListDouble distances;
 	bool debug;
 
 	AgentBased(int N) :
@@ -67,6 +69,7 @@ public:
 		for (int i = 0; i < n; i++) {
 			Point p(rand() % size - (size / 2), rand() % size - (size / 2));
 			points[i] = p;
+			points_initial[i] = p;
 			try {
 				space.at(p)[i] = 1;
 			} catch (exception& e) {
@@ -122,6 +125,29 @@ public:
 
 		//		add the agent's id to its new point in space
 		space[tmp_point][agent_id] = 1;
+	}
+
+	/* compute distance between two Points*/
+	double distance(Point p1, Point p2) {
+		double x = p1.first - p2.first;
+		double y = p1.second - p2.second;
+		return sqrt(x * x + y * y);
+	}
+
+	/* This function lists the distances of all agents from their respective initial positions */
+	ListDouble getDisplacements() {
+		ListDouble dist;
+		for (int i = 0; i < num_agents; i++) {
+			dist[i] = distance(points[i], points_initial[i]);
+		}
+		return dist;
+	}
+
+	/* Print a list with keys =0,1,2,...,N. T can be List or ListDouble */
+	template<class T>
+	void printList(T list) {
+		for (int i = 0; i < list.size(); i++)
+			printf("%d %f\n", i, list[i]);
 	}
 
 	/* move all agents one step forward */

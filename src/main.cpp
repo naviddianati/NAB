@@ -35,6 +35,16 @@ void process_input(int argc, char* argv[]) {
 	}
 }
 
+void measureDisplacements(AgentBased model) {
+	if (mode == "ensemble") {
+		cout << "ERROR: Need to run under 'single' mode.\n";
+		return;
+	}
+	model.run(num_steps, 0);
+	ListDouble dist = model.getDisplacements();
+	model.printList<ListDouble>(dist);
+}
+
 int main(int argc, char* argv[]) {
 	process_input(argc, argv);
 	AgentBased model(size);
@@ -43,8 +53,9 @@ int main(int argc, char* argv[]) {
 	model.setDebug(0);
 
 	if (mode == "single") {
-		model.run(num_steps, 0);
-		model.printScores(0);
+		/*odel.run(num_steps, 0);
+		model.printScores(0);*/
+		measureDisplacements(model);
 	}
 
 	if (mode == "ensemble") {
