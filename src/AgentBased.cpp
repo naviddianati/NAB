@@ -102,8 +102,13 @@ public:
 	void move(int agent_id) {
 		tmp_point_old = points[agent_id];
 		// determine the deltas
-		dx = rand() % 3 - 1;
-		dy = rand() % 3 - 1;
+
+//		dx = rand() % 3 - 1;
+//		dy = rand() % 3 - 1;
+
+		dx = (rand() % 2 * 2) - 1;
+		dy = (rand() % 2 * 2) - 1;
+
 		tmp_point.first = points[agent_id].first + dx;
 		tmp_point.second = points[agent_id].second + dy;
 
@@ -147,9 +152,13 @@ public:
 		}
 	}
 
-	void printScores() {
-		for (int i = 0; i < num_agents; i++)
+	void printScores(int remove_zeros) {
+		for (int i = 0; i < num_agents; i++) {
+			if (remove_zeros)
+				if (scores[i] == 0)
+					continue;
 			printf("%d %d\n", i, scores[i]);
+		}
 
 	}
 
@@ -178,7 +187,7 @@ public:
 			resetAgents(num_agents);
 			resetScores();
 			runFixedTime(steps, 0);
-			printScores();
+			printScores(1);
 			if (debug)
 				listAll();
 		}

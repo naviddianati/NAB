@@ -40,11 +40,11 @@ int main(int argc, char* argv[]) {
 	AgentBased model(size);
 	model.resetAgents(num_agents);
 
-	model.setDebug(1);
+	model.setDebug(0);
 
 	if (mode == "single") {
 		model.run(num_steps, 0);
-		model.printScores();
+		model.printScores(0);
 	}
 
 	if (mode == "ensemble") {
