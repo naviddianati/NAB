@@ -30,8 +30,7 @@ public:
 	ListDouble distances;
 	bool debug;
 
-	AgentBased(int N) :
-			origin(0, 0) {
+	AgentBased(int N, int N_origin) {
 		/* initialize random seed: */
 		srand(time(NULL));
 		dx = 0;
@@ -39,11 +38,13 @@ public:
 
 		//Initialize
 		size = N;
+		size_origin = N_origin;
 		num_agents = 0;
 		DictSpace::iterator it;
 		DictPoints::iterator itpoints;
 		debug = false;
 
+		setOrigin();
 		resetScores();
 
 	}
@@ -57,6 +58,17 @@ public:
 	}
 
 	void doSomething() {
+	}
+
+	/* populate dict_origin which is a dictionary of points that constitute the origin*/
+	void setOrigin() {
+		int counter = 0;
+		for (int i = -size_origin / 2; i < size_origin / 2; i++)
+			for (int j = -size_origin / 2; j < size_origin / 2; j++) {
+				Point p(i, j);
+				dict_origin[counter] = p;
+				counter++;
+			}
 	}
 
 	void resetAgents(int n) {
@@ -168,12 +180,15 @@ public:
 	}
 
 	void updateScores() {
-		DictSpace::iterator origin_it = space.find(origin);
-		if (origin_it != space.end()) {
-			List origin_list = (*origin_it).second;
-			for (list_it = origin_list.begin(); list_it != origin_list.end();
-					++list_it) {
-				scores[(*list_it).first] += origin_list.size() - 1;
+		for (DictPoints::iterator it = dict_origin.begin();
+				it != dict_origin.end(); ++it) {
+			DictSpace::iterator origin_it = space.find((*it).second);
+			if (origin_it != space.end()) {
+				List origin_list = (*origin_it).second;
+				for (list_it = origin_list.begin();
+						list_it != origin_list.end(); ++list_it) {
+					scores[(*list_it).first] += origin_list.size() - 1;
+				}
 			}
 		}
 	}
@@ -221,9 +236,11 @@ public:
 
 private:
 	int dx, dy;
+	int size_origin;
 	Point tmp_point, tmp_point_old;
 	List::iterator list_it;
-	Point origin;
+//	Point origin;
+	DictPoints dict_origin;
 
 };
 

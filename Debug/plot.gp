@@ -2,7 +2,7 @@
 
 set term pdf color round font 'Source Sans Pro Bold'
 
-name = "tmp"
+name = "degrees"
 filename = name.'.txt'
 tablename = name.'.table'
 

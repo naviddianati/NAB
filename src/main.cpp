@@ -10,7 +10,7 @@
 
 using namespace std;
 
-int size, num_agents, num_steps, num_ensembles;
+int size, size_origin, num_agents, num_steps, num_ensembles;
 string mode; // "single" or "ensemble"
 
 void process_input(int argc, char* argv[]) {
@@ -33,6 +33,8 @@ void process_input(int argc, char* argv[]) {
 		printf("Invalid arguments.");
 		exit(EXIT_FAILURE);
 	}
+
+	size_origin = size/10;
 }
 
 void measureDisplacements(AgentBased model) {
@@ -47,14 +49,14 @@ void measureDisplacements(AgentBased model) {
 
 int main(int argc, char* argv[]) {
 	process_input(argc, argv);
-	AgentBased model(size);
+	AgentBased model(size, 10);
 	model.resetAgents(num_agents);
 
 	model.setDebug(0);
 
 	if (mode == "single") {
 		/*odel.run(num_steps, 0);
-		model.printScores(0);*/
+		 model.printScores(0);*/
 		measureDisplacements(model);
 	}
 
