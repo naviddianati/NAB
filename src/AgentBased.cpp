@@ -30,7 +30,7 @@ public:
 	ListDouble distances;
 	bool debug;
 
-	AgentBased(int N, int N_origin) {
+	AgentBased(int N, int N_origin, bool is_debug) {
 		/* initialize random seed: */
 		srand(time(NULL));
 		dx = 0;
@@ -42,16 +42,17 @@ public:
 		num_agents = 0;
 		DictSpace::iterator it;
 		DictPoints::iterator itpoints;
-		debug = false;
+		debug = is_debug;
 
 		setOrigin();
 		resetScores();
 
 	}
 
-	void setDebug(bool isDebug) {
-		debug = isDebug;
-	}
+//	void setDebug(bool isDebug) {
+//		debug = isDebug;
+//	}
+
 	void resetScores() {
 		for (int i = 0; i < num_agents; i++)
 			scores[i] = 0;
@@ -69,6 +70,9 @@ public:
 				dict_origin[counter] = p;
 				counter++;
 			}
+		if (debug)
+			printf("size_origin: %d\nNumber of points counted as origin: %d\n",
+					size_origin, counter);
 	}
 
 	void resetAgents(int n) {
@@ -104,10 +108,10 @@ public:
 		for (it = space.begin(), i = 0; it != space.end(); ++it, i++) {
 			p = (*it).first;
 			list_of_indices = (*it).second;
-			printf("(%d,%d) ->", p.first, p.second);
+			printf("%d %d ", p.first, p.second);
 			for (itList = list_of_indices.begin();
 					itList != list_of_indices.end(); ++itList) {
-				printf("'%d' ", (*itList).first);
+				printf("%d ", (*itList).first);
 			}
 			cout << "\n";
 		}
@@ -180,17 +184,45 @@ public:
 	}
 
 	void updateScores() {
+		int origin_occupants_counter = 0;
+		List meeting_agent_inds;
+		/* Iterate through the list of points constituting the origin */
 		for (DictPoints::iterator it = dict_origin.begin();
 				it != dict_origin.end(); ++it) {
+
+			/* Find if any of these "origin" points exist in space (are occupied) */
 			DictSpace::iterator origin_it = space.find((*it).second);
+
+			/* If any of them are occupied, then... */
 			if (origin_it != space.end()) {
+
+				/* Get the list of agents occupying that origin point */
 				List origin_list = (*origin_it).second;
+
+				/* Increment the counter by the number of agents at that origin point */
+				origin_occupants_counter += origin_list.size();
+
+				/* iterate through the list of agents occupying that origin point*/
 				for (list_it = origin_list.begin();
 						list_it != origin_list.end(); ++list_it) {
-					scores[(*list_it).first] += origin_list.size() - 1;
+					if (debug) {
+						printf("__________________________________________\n");
+						printf("occupants of origin point: %d\n",
+								int(origin_list.size() - 1));
+					}
+
+					/* record the id's of the agents who are at the origin*/
+					meeting_agent_inds[(*list_it).first] = 1;
 				}
 			}
 		}
+
+		/* iterate through the agents found to be at the origin */
+		for (List::iterator it = meeting_agent_inds.begin();
+				it != meeting_agent_inds.end(); ++it)
+
+			/* update their scores */
+			scores[(*it).first] += origin_occupants_counter - 1;
 	}
 
 	void printScores(int remove_zeros) {
@@ -242,5 +274,6 @@ private:
 //	Point origin;
 	DictPoints dict_origin;
 
-};
+}
+;
 

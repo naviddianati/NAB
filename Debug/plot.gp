@@ -6,12 +6,12 @@ name = "degrees"
 filename = name.'.txt'
 tablename = name.'.table'
 
-binwidth =1
+binwidth =200
 set grid
 
 bin(x,width)=width*floor(x/width)
 
-#set xrange [70000:200000]
+#set xrange [1:10]
 
 
 set table tablename

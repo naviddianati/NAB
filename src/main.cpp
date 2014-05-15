@@ -12,7 +12,7 @@ using namespace std;
 
 int size, size_origin, num_agents, num_steps, num_ensembles;
 string mode; // "single" or "ensemble"
-
+bool is_debug = false;
 void process_input(int argc, char* argv[]) {
 	if (argc == 1) {
 		size = 50;
@@ -34,7 +34,7 @@ void process_input(int argc, char* argv[]) {
 		exit(EXIT_FAILURE);
 	}
 
-	size_origin = size/10;
+	size_origin = size / 10;
 }
 
 void measureDisplacements(AgentBased model) {
@@ -48,16 +48,18 @@ void measureDisplacements(AgentBased model) {
 }
 
 int main(int argc, char* argv[]) {
+	is_debug = false;
 	process_input(argc, argv);
-	AgentBased model(size, 10);
+	AgentBased model(size, size_origin, is_debug);
 	model.resetAgents(num_agents);
 
-	model.setDebug(0);
+//	model.setDebug(1);
 
 	if (mode == "single") {
-		/*odel.run(num_steps, 0);
-		 model.printScores(0);*/
-		measureDisplacements(model);
+		model.run(num_steps, 0);
+		model.printScores(1);
+//		measureDisplacements(model);
+//		model.ensembleFixedTime(1, num_steps, 0);
 	}
 
 	if (mode == "ensemble") {

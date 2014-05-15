@@ -1,5 +1,4 @@
 #! /bin/bash
 
-scp $MOBS:src/NAB/Debug/output-all.out .
+scp $MOBS:src/NAB/Debug/degrees.txt .
 
-cp output-all.out degrees.txt
