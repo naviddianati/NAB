@@ -24,7 +24,7 @@ class AgentBased {
 public:
 	int size, num_agents;
 
-	DictSpace space;
+	DictSpace space, space_initial;
 	DictPoints points, points_initial;
 	List scores;
 	ListDouble distances;
@@ -75,7 +75,16 @@ public:
 					size_origin, counter);
 	}
 
-	void resetAgents(int n) {
+	/* reset agent locations to their originals */
+	void resetAgents(){
+		points = points_initial;
+		space = space_initial;
+	}
+
+
+
+	/* empty space, and repopulate it with new agents */
+	void initializeAgents(int n) {
 		num_agents = n;
 
 		// empty space
@@ -85,7 +94,6 @@ public:
 		for (int i = 0; i < n; i++) {
 			Point p(rand() % size - (size / 2), rand() % size - (size / 2));
 			points[i] = p;
-			points_initial[i] = p;
 			try {
 				space.at(p)[i] = 1;
 			} catch (exception& e) {
@@ -97,6 +105,9 @@ public:
 
 		if (debug)
 			listAll();
+
+		points_initial = points;
+		space_initial = space;
 	}
 
 	void listAll() {
@@ -254,16 +265,17 @@ public:
 	}
 
 	void ensembleFixedTime(int ensemble_size, int steps, bool verbose) {
+		initializeAgents(num_agents);
 		for (int i = 0; i < ensemble_size; i++) {
 			if (verbose)
 				printf("Ensemble no %d\n", i);
-			resetAgents(num_agents);
-			resetScores();
+			resetAgents();
+//			resetScores();
 			runFixedTime(steps, 0);
-			printScores(1);
 			if (debug)
 				listAll();
 		}
+		printScores(1);
 	}
 
 private:

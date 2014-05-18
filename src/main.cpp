@@ -51,7 +51,7 @@ int main(int argc, char* argv[]) {
 	is_debug = false;
 	process_input(argc, argv);
 	AgentBased model(size, size_origin, is_debug);
-	model.resetAgents(num_agents);
+	model.initializeAgents(num_agents);
 
 //	model.setDebug(1);
 
