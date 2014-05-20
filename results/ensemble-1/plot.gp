@@ -8,7 +8,7 @@ name = "degrees"
 filename = name.'.txt'
 tablename = name.'.table'
 
-binwidth =600
+binwidth =100
 #set grid
 
 bin(x,width)=width*floor(x/width)
@@ -20,7 +20,7 @@ set table tablename
 plot filename using (bin($2,binwidth)):(2) smooth freq  with boxes
 unset table
 
-set logscale y;
+set logscale xy;
 load 'Paired.plt'
 set style fill transparent solid 0.1
 set samples 10000

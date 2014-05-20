@@ -33,8 +33,9 @@ void process_input(int argc, char* argv[]) {
 		printf("Invalid arguments.");
 		exit(EXIT_FAILURE);
 	}
+//	size_origin = size / 10
+	size_origin = 4;
 
-	size_origin = size / 10;
 }
 
 void measureDisplacements(AgentBased model) {
@@ -64,6 +65,9 @@ int main(int argc, char* argv[]) {
 
 	if (mode == "ensemble") {
 		model.ensembleFixedTime(num_ensembles, num_steps, 0);
+//		model.printScores(1);
+		model.printAdjacency();
+
 	}
 
 	exit(0);

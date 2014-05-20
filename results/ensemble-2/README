@@ -1,0 +1,27 @@
+SIZE=100
+NUM_AGENTS=10000
+NUM_STEPS=100
+NUM_ENSEMBLES=10000
+
+
+
+
+
+commit 96aff4e04f28e791c7d1fe939b7f1ef502e6f12e
+Author: naviddianati <navid.dianati@gmail.com>
+Date:   Sat May 17 20:26:03 2014 -0400
+
+    Fixed Time ensemble simulations modified
+    
+    A major change to how these simulations are done. Now, for each
+    realization, the agents aren't deleted and recreated from scratch.
+    Now, agents are created only once in the begnning, and for each
+    realization, they are simply put back into their original location, and
+    their scores are preserved. The scores are incremented at each
+    realization.
+
+
+Note: slight difference from the commit:
+
+size_origin = size / 40;
+

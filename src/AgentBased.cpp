@@ -17,6 +17,8 @@ typedef std::map<int, double> ListDouble;
 typedef std::pair<int, int> Point;
 typedef std::map<Point, List> DictSpace;
 
+typedef std::map<int, List> DictList;
+
 // Dict {id: point}
 typedef std::map<int, Point> DictPoints;
 
@@ -28,6 +30,7 @@ public:
 	DictPoints points, points_initial;
 	List scores;
 	ListDouble distances;
+	DictList adjacency;
 	bool debug;
 
 	AgentBased(int N, int N_origin, bool is_debug) {
@@ -54,8 +57,11 @@ public:
 //	}
 
 	void resetScores() {
-		for (int i = 0; i < num_agents; i++)
+		List list;
+		for (int i = 0; i < num_agents; i++) {
 			scores[i] = 0;
+			adjacency[i] = list;
+		}
 	}
 
 	void doSomething() {
@@ -64,8 +70,8 @@ public:
 	/* populate dict_origin which is a dictionary of points that constitute the origin*/
 	void setOrigin() {
 		int counter = 0;
-		for (int i = -size_origin / 2; i < size_origin / 2; i++)
-			for (int j = -size_origin / 2; j < size_origin / 2; j++) {
+		for (int i = -size_origin / 2; i < -size_origin / 2+size_origin; i++)
+			for (int j = -size_origin / 2; j < -size_origin / 2+size_origin; j++) {
 				Point p(i, j);
 				dict_origin[counter] = p;
 				counter++;
@@ -76,12 +82,10 @@ public:
 	}
 
 	/* reset agent locations to their originals */
-	void resetAgents(){
+	void resetAgents() {
 		points = points_initial;
 		space = space_initial;
 	}
-
-
 
 	/* empty space, and repopulate it with new agents */
 	void initializeAgents(int n) {
@@ -194,6 +198,10 @@ public:
 				++it;
 	}
 
+	void updateAdjacency() {
+
+	}
+
 	void updateScores() {
 		int origin_occupants_counter = 0;
 		List meeting_agent_inds;
@@ -228,12 +236,37 @@ public:
 			}
 		}
 
+		List::iterator it_out, it_in;
+		std::pair<List::iterator, bool> insert_result;
+		std::pair<int, int> adjacency_element;
 		/* iterate through the agents found to be at the origin */
-		for (List::iterator it = meeting_agent_inds.begin();
-				it != meeting_agent_inds.end(); ++it)
+		for (it_out = meeting_agent_inds.begin();
+				it_out != meeting_agent_inds.end(); ++it_out) {
 
 			/* update their scores */
-			scores[(*it).first] += origin_occupants_counter - 1;
+			scores[(*it_out).first] += origin_occupants_counter - 1;
+
+			/* update the adjacency matrix */
+			/* create a reference to the row of adjacency corresponding to the it_out node */
+			List& current_row = adjacency[(*it_out).first];
+			for (it_in = meeting_agent_inds.begin();
+					it_in != meeting_agent_inds.end(); ++it_in) {
+				/* if it_in and it_out point to the same node, continue */
+				if ((*it_in).first == (*it_out).first)
+					continue;
+
+				adjacency_element.first = (*it_in).first;
+				adjacency_element.second = 1;
+
+				/* try to insert adjacency_element into the adjacency matrix row, and get the result */
+				insert_result = current_row.insert(adjacency_element);
+
+				/* if entry already existed increment the weight */
+				if (!insert_result.second)
+					(*(insert_result.first)).second += 1;
+			}
+
+		}
 	}
 
 	void printScores(int remove_zeros) {
@@ -270,12 +303,22 @@ public:
 			if (verbose)
 				printf("Ensemble no %d\n", i);
 			resetAgents();
-//			resetScores();
 			runFixedTime(steps, 0);
 			if (debug)
 				listAll();
 		}
-		printScores(1);
+	}
+
+	void printAdjacency() {
+		for (int i = 0; i < num_agents; i++) {
+			for (List::iterator it = adjacency[i].begin();
+					it != adjacency[i].end(); ++it) {
+				int first_id = i;
+				int second_id = (*it).first;
+				int weight = (*it).second;
+				printf("%d %d %d\n", first_id, second_id, weight);
+			}
+		}
 	}
 
 private:

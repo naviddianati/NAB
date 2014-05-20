@@ -5,4 +5,7 @@ Network-Models-AgentBased
 *.pdf
 *.table
 *.out
+*.gephi
+*.svg
 
+/Debug
